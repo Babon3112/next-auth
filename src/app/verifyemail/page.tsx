@@ -20,6 +20,7 @@ export default function VerifyEmailPage() {
       setVerified(true);
     } catch (error: any) {
       setError(true);
+      setLoading(false);
       console.error(
         "Verification error:",
         error.response?.data || error.message

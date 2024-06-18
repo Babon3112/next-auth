@@ -11,16 +11,20 @@ export default function LoginPage() {
   const [user, setUser] = useState({ email: "", password: "" });
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onLogin = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
+      setError("");
       const response = await axios.post("/api/users/login", user);
       console.log("Login successful:", response.data);
       router.push("/profile");
     } catch (error: any) {
+      setLoading(false);
       console.log("Login failed");
       toast.error(error.message);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -33,11 +37,14 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
       <div className="bg-white p-6 rounded-lg shadow-xl w-80">
-        <h1 className="text-purple-600 text-center mb-3 text-3xl font-extrabold">
+        <h1 className="text-purple-600 text-center mb-3 text-3xl font-bold">
           Log In
         </h1>
         <hr className="mb-4 border-purple-600" />
-        <label htmlFor="email" className="mb-2 text-gray-700">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
           Email
         </label>
         <input
@@ -46,9 +53,12 @@ export default function LoginPage() {
           value={user.email}
           placeholder="Enter your email"
           onChange={(e) => setUser({ ...user, email: e.target.value })}
-          className="p-2 border border-gray-300 rounded-lg mb-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-600 text-black"
+          className="p-2 border border-gray-300 rounded-lg mb-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-600 text-black mt-1"
         />
-        <label htmlFor="password" className="mb-2 text-gray-700">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700"
+        >
           Password
         </label>
         <input
@@ -57,8 +67,11 @@ export default function LoginPage() {
           value={user.password}
           placeholder="Enter your password"
           onChange={(e) => setUser({ ...user, password: e.target.value })}
-          className="p-2 border border-gray-300 rounded-lg mb-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-600 text-black"
+          className="p-2 border border-gray-300 rounded-lg mb-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-600 text-black mt-1"
         />
+        <p className="font-bold mt-4 mb-4 text-red-500 text-sm text-center">
+          {error ? `${error}` : ""}
+        </p>
         <p className="font-bold mb-4 text-gray-900 text-sm text-center">
           {loading ? "Processing..." : ""}
         </p>
@@ -79,6 +92,14 @@ export default function LoginPage() {
             className="text-purple-600 hover:underline hover:text-purple-700"
           >
             Didn't have an account? signup
+          </Link>
+        </p>
+        <p className="text-sm text-center">
+          <Link
+            href="/forgotpassword"
+            className="text-purple-600 hover:underline hover:text-purple-700"
+          >
+            Forgot Password
           </Link>
         </p>
       </div>
